@@ -6,17 +6,39 @@ const User = require('../models/user.js');
 
 // router logic will go here - will be built later on in the lab
 
-router.get('/', (req, res) => {
-    res.render('foods/index.ejs');
+router.get('/', async (req, res) => {
+    try {
+      const currentUser = await User.findById(req.session.user._id);
+      res.render('foods/index.ejs', {
+        foods: currentUser.foods,
+      });
+    } catch (error) {
+      console.log(error);
+      res.redirect('/');
+    }
   });
-
-router.get('/users/:userId/foods/new', (req, res) => {
+router.get('/new', (req, res) => {
     res.render('foods/new.ejs')
 
 })
 
-router.post('/users/:userId/foods', (req, res) => {
-    const user = req.session.user 
-})
+
+
+router.post('/', async (req, res) => {
+    try {
+      const currentUser = await User.findById(req.session.user._id);
+      currentUser.foods.push(req.body);
+      await currentUser.save();
+      res.redirect(`/users/${currentUser._id}/foods`);
+    } catch (error) {
+      console.log(error);
+      res.redirect('/');
+    }
+  });
+
+  // controllers/applications.js
+
+
+  
 module.exports = router;
 

@@ -21,6 +21,8 @@ mongoose.connection.on('connected', () => {
   console.log(`Connected to MongoDB ${mongoose.connection.name}.`);
 });
 
+
+
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride('_method'));
 // app.use(morgan('dev'));
@@ -31,6 +33,7 @@ app.use(
     saveUninitialized: true,
   })
 );
+app.use(passUserToView);
 
 app.get('/', (req, res) => {
   res.render('index.ejs', {
@@ -40,7 +43,7 @@ app.get('/', (req, res) => {
 
 
 
-app.use(passUserToView);
+
 app.use('/auth', authController);
 app.use(isSignedIn);
 app.use('/users/:userId/foods', foodsController);
