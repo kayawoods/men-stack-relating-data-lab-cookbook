@@ -36,7 +36,18 @@ router.post('/', async (req, res) => {
     }
   });
 
-  // controllers/applications.js
+  router.get('/:applicationId', async (req, res) => {
+    try {
+      const currentUser = await User.findById(req.session.user._id);
+      const food = currentUser.foods.id(req.params.foodId);
+      res.render('foods/show.ejs', {
+        food: food,
+      });
+    } catch (error) {
+      console.log(error);
+      res.redirect('/');
+    }
+  });
 
 
   
